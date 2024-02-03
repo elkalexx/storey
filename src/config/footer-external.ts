@@ -22,7 +22,7 @@ export const footerExternalConfig = {
             items: [
                 {
                     title: "Skateshop",
-                    link: "https://github.com/shadcn-ui/taxonomy"
+                    link: "https://github.com/sadmann7/skateshop"
                 },
                 {
                     title: "Taxonomy",
