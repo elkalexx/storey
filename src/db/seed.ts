@@ -1,4 +1,4 @@
-import {seedProducts} from "@/app/lib/actions/products";
+import {seedProducts} from "@/lib/actions/products";
 
 async function runSeed() {
     console.log("⏳ Running seed...")

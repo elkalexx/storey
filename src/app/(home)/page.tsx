@@ -1,9 +1,10 @@
 import {getFeaturedProducts} from "@/lib/fetcher/products";
 import {ProductCard} from "@/components/cards/product-card";
+import {Product} from "@/db/schema";
 
 export default async function HomePage() {
 
-    const featuredProducts = await getFeaturedProducts()
+    const featuredProducts: Product[] = await getFeaturedProducts()
     return (
         <section className="p-1 pb-10">
             <section className="mx-auto flex max-w-7xl flex-col items-center justify-center gap-4 py-24 text-center md:py-32">

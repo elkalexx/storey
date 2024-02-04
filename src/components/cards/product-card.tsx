@@ -10,6 +10,7 @@ import {EyeOpenIcon, HeartFilledIcon} from "@radix-ui/react-icons";
 import Link from "next/link";
 import {cn} from "@/lib/utils";
 import {AspectRatio} from "@/components/ui/aspect-ratio";
+import {addProductToCart} from "@/lib/actions/cart";
 
 interface ProductCardProps {
     product: Product
@@ -19,11 +20,10 @@ export function ProductCard({
                                 product
                             }: ProductCardProps) {
     const [isAddingToCart, setIsAddingToCart] = useState(false)
-    const handleAddToCard = () => {
+    const handleAddToCard = async (productId: number) => {
         setIsAddingToCart(true)
-        setTimeout(() => {
-            setIsAddingToCart(false)
-        }, 3000)
+        await addProductToCart({productId});
+        setIsAddingToCart(false)
     }
     return (
         <Card className="overflow-hidden rounded-sm size-full">
@@ -45,7 +45,7 @@ export function ProductCard({
                 <Button
                     aria-label="Add to card"
                     className="h-8 w-full rounded-sm"
-                    onClick={handleAddToCard}
+                    onClick={handleAddToCard.bind(null, product.id)}
                     disabled={isAddingToCart}
                 >
                     {isAddingToCart && (
