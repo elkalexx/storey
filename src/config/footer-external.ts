@@ -5,30 +5,30 @@ export const footerExternalConfig = {
             items: [
                 {
                     title: "Instagram",
-                    link: "https://instagram.com/elkalexx"
+                    link: "https://instagram.com/elkalexx",
                 },
                 {
                     title: "GitHub",
-                    link: "https://github.com/elkalexx"
+                    link: "https://github.com/elkalexx",
                 },
                 {
                     title: "X",
-                    link: "https://twitter.com/elkalexx_"
-                }
-            ]
+                    link: "https://twitter.com/elkalexx_",
+                },
+            ],
         },
         {
             title: "Inspired by:",
             items: [
                 {
                     title: "Skateshop",
-                    link: "https://github.com/sadmann7/skateshop"
+                    link: "https://github.com/sadmann7/skateshop",
                 },
                 {
                     title: "Taxonomy",
-                    link: "https://github.com/shadcn-ui/taxonomy"
-                }
-            ]
-        }
-    ]
-}
+                    link: "https://github.com/shadcn-ui/taxonomy",
+                },
+            ],
+        },
+    ],
+};

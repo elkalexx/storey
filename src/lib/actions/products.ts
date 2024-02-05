@@ -1,7 +1,8 @@
-"use server"
-import {Product, products} from "@/db/schema";
-import {faker} from "@faker-js/faker";
-import {db} from '@/db';
+"use server";
+
+import { db } from "@/db";
+import { Product, products } from "@/db/schema";
+import { faker } from "@faker-js/faker";
 
 export async function seedProducts() {
     const data: Product[] = [];
@@ -12,11 +13,10 @@ export async function seedProducts() {
             uuid: faker.string.uuid(),
             name: faker.commerce.productName(),
             price: faker.commerce.price(),
-        })
+        });
     }
 
     await db.delete(products);
 
-    await db.insert(products).values(data)
-
+    await db.insert(products).values(data);
 }
