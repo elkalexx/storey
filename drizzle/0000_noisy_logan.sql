@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS "cart" (
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"items_count" integer NOT NULL,
 	"items_qty" integer NOT NULL,
-	"grand_total" numeric NOT NULL
+	"grand_total" double precision NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "cart_item" (
@@ -15,7 +15,15 @@ CREATE TABLE IF NOT EXISTS "cart_item" (
 	"sku" varchar NOT NULL,
 	"name" varchar NOT NULL,
 	"qty" integer NOT NULL,
-	"price" numeric NOT NULL
+	"price" double precision NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "products" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"uuid" uuid,
+	"name" varchar NOT NULL,
+	"price" double precision NOT NULL,
+	"sku" varchar NOT NULL
 );
 --> statement-breakpoint
 DO $$ BEGIN

@@ -9,9 +9,9 @@ import { cookies } from "next/headers";
 import { db } from "@/db";
 import { cart, cartItem, products } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { undefined, type z } from "zod";
-
-import { addToCartSchema } from "@/lib/validations/cart";
+import { type z } from "zod";
+import { addToCartSchema, CartItemToInsert } from "@/lib/validations/cart";
+import { revalidatePath } from "next/cache";
 
 export async function addProductToCart(input: z.infer<typeof addToCartSchema>) {
     const cartInput = addToCartSchema.parse(input);
@@ -19,20 +19,24 @@ export async function addProductToCart(input: z.infer<typeof addToCartSchema>) {
     const cookieStore = cookies();
     const cartId = cookieStore.get("cartId")?.value;
 
-    const product = await db
-        .select()
-        .from(products)
-        .where(eq(products.id, cartInput.productId));
+    const product = await db.query.products.findFirst({
+        where: eq(products.id, cartInput.productId),
+    });
+
+    if (!product) {
+        throw new Error("Product not found.");
+    }
 
     if (!cartId) {
+        // user has no cart, create one, assign the products and assign the cart item to it as well
         const cartToInsert: {
-            grandTotal: string;
+            grandTotal: number;
             itemsQty: number;
             itemsCount: number;
         } = {
             itemsCount: 1,
             itemsQty: 1,
-            grandTotal: product[0].price,
+            grandTotal: product.price,
         };
 
         const insertedCart = await db
@@ -41,21 +45,43 @@ export async function addProductToCart(input: z.infer<typeof addToCartSchema>) {
             .returning({ id: cart.id });
         const cartId: number = insertedCart[0].id;
         cookies().set("cartId", String(cartId));
-
-        // insert into cart items:
-        const cartItemToInsert: {
-            cartId: number;
-            sku: string;
-            name: string;
-            qty: number;
-            price: string;
-        } = {
+        const cartItemToInsert: CartItemToInsert = {
             cartId: cartId,
-            sku: "420",
-            name: product[0].name,
+            sku: product.sku,
+            name: product.name,
             qty: 1,
-            price: product[0].price,
+            price: product.price,
         };
         await db.insert(cartItem).values(cartItemToInsert);
+        revalidatePath("/");
+        return;
     }
+
+    const existingCart = await db.query.cart.findFirst({
+        where: eq(cart.id, Number(cartId)),
+    });
+
+    if (!existingCart) {
+        throw Error("Cart could not be found");
+    }
+
+    const updateCart = {
+        itemsCount: existingCart.itemsCount + 1,
+        itemsQty: existingCart.itemsQty + 1,
+        grandTotal: existingCart.grandTotal + product.price,
+    };
+    await db.update(cart).set(updateCart).where(eq(cart.id, existingCart.id));
+
+    const cartItemToInsert: CartItemToInsert = {
+        cartId: existingCart.id,
+        sku: product.sku,
+        name: product.name,
+        qty: 1,
+        price: product.price,
+    };
+
+    await db.insert(cartItem).values(cartItemToInsert);
+    revalidatePath("/");
+    return;
+    // at later point, take care of expired carts as well
 }

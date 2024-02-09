@@ -12,7 +12,8 @@ export async function seedProducts() {
             id: i,
             uuid: faker.string.uuid(),
             name: faker.commerce.productName(),
-            price: faker.commerce.price(),
+            price: Number(faker.commerce.price()) + 0.99,
+            sku: faker.string.alphanumeric({ length: 10, casing: "upper" }),
         });
     }
 

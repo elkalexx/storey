@@ -1,5 +1,5 @@
 import {
-    decimal,
+    doublePrecision,
     integer,
     pgTable,
     serial,
@@ -7,12 +7,13 @@ import {
     uuid,
     varchar,
 } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 
 export const products = pgTable("products", {
     id: serial("id").notNull().primaryKey(),
     uuid: uuid("uuid"),
     name: varchar("name").notNull(),
-    price: decimal("price").notNull(),
+    price: doublePrecision("price").notNull(),
     sku: varchar("sku").notNull(),
 });
 
@@ -25,7 +26,7 @@ export const cart = pgTable("cart", {
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
     itemsCount: integer("items_count").notNull(),
     itemsQty: integer("items_qty").notNull(),
-    grandTotal: decimal("grand_total").notNull(),
+    grandTotal: doublePrecision("grand_total").notNull(),
 });
 
 export type Cart = typeof cart.$inferSelect;
@@ -40,7 +41,7 @@ export const cartItem = pgTable("cart_item", {
     sku: varchar("sku").notNull(),
     name: varchar("name").notNull(),
     qty: integer("qty").notNull(),
-    price: decimal("price").notNull(),
+    price: doublePrecision("price").notNull(),
 });
 
 export type CartItem = typeof cart.$inferSelect;
