@@ -2,34 +2,27 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { type Product } from "@/db/schema";
-import { EyeOpenIcon, HeartFilledIcon } from "@radix-ui/react-icons";
 
 import { addProductToCart } from "@/lib/actions/cart";
 import { cn } from "@/lib/utils";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
     Card,
     CardContent,
-    CardDescription,
     CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
 import { Icons } from "@/components/icons";
 
-//
-// interface ProductCardProps {
-//     product: Product
-// }
-
-type ProductCardProps = {
+interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
     product: Product;
-};
+}
 
-export function ProductCard({ product }: ProductCardProps) {
+
+export function ProductCard({ product, className }: ProductCardProps) {
     const [isAddingToCart, setIsAddingToCart] = useState(false);
     const handleAddToCard = async (productId: number) => {
         setIsAddingToCart(true);
@@ -37,8 +30,16 @@ export function ProductCard({ product }: ProductCardProps) {
         setIsAddingToCart(false);
     };
     return (
-        <Card className="size-full overflow-hidden rounded-sm">
+        <Card
+            className={cn(
+                "size-full overflow-hidden rounded-sm lg:size-full",
+                className
+            )}
+        >
             <CardHeader>
+                <span className="text-center text-xl font-bold">
+                    {product.name}
+                </span>
                 <AspectRatio>
                     <Image
                         src={
@@ -51,10 +52,25 @@ export function ProductCard({ product }: ProductCardProps) {
                 </AspectRatio>
             </CardHeader>
             <CardContent>
-                <CardTitle className="line-clamp-1 leading-tight">
-                    {product.name}
+                {/*<CardTitle className="leading-tight line-clamp-1">*/}
+                {/*    {product.name}*/}
+                {/*</CardTitle>*/}
+                <CardTitle>
+                    <div className="flex justify-center gap-14">
+                        <div className="flex flex-col gap-2 text-muted-foreground">
+                            <p className="underline">Цена:</p>
+                            <p className="text-lg font-bold line-through md:text-base">
+                                {(product.price * 1.95).toFixed(2)} лв.
+                            </p>
+                        </div>
+                        <div className="flex flex-col gap-2 text-red-500">
+                            <p className="underline">Промо цена:</p>
+                            <p className="text-lg font-bold md:text-base">
+                                {product.price} лв.
+                            </p>
+                        </div>
+                    </div>
                 </CardTitle>
-                <CardDescription>{product.price} €</CardDescription>
             </CardContent>
             <CardFooter className="gap-2">
                 <Button
@@ -71,19 +87,19 @@ export function ProductCard({ product }: ProductCardProps) {
                     )}
                     Add to card
                 </Button>
-                <Link
-                    href="/"
-                    className={cn(
-                        buttonVariants({
-                            variant: "secondary",
-                            size: "icon",
-                            className: "h-8 w-8 shrink-0",
-                        })
-                    )}
-                >
-                    <EyeOpenIcon className="size-4" />
-                    <span className="sr-only">Preview</span>
-                </Link>
+                {/*<Link*/}
+                {/*    href="/"*/}
+                {/*    className={cn(*/}
+                {/*        buttonVariants({*/}
+                {/*            variant: "secondary",*/}
+                {/*            size: "icon",*/}
+                {/*            className: "h-8 w-8 shrink-0",*/}
+                {/*        })*/}
+                {/*    )}*/}
+                {/*>*/}
+                {/*    <EyeOpenIcon className="size-4" />*/}
+                {/*    <span className="sr-only">Preview</span>*/}
+                {/*</Link>*/}
             </CardFooter>
         </Card>
     );

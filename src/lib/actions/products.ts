@@ -7,7 +7,7 @@ import { faker } from "@faker-js/faker";
 export async function seedProducts() {
     const data: Product[] = [];
 
-    for (let i = 0; i <= 10; i++) {
+    for (let i = 0; i <= 8; i++) {
         data.push({
             id: i,
             uuid: faker.string.uuid(),

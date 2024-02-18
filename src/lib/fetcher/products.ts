@@ -6,5 +6,5 @@ import { products } from "@/db/schema";
 
 export async function getFeaturedProducts() {
     noStore();
-    return db.select().from(products).limit(8);
+    return db.select().from(products).limit(6);
 }

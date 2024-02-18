@@ -12,15 +12,28 @@ export const cartItems = z.object({
     name: z.string(),
     sku: z.string(),
     price: z.number(),
-    qty: z.number()
-})
-export type CartItems = z.infer<typeof cartItems>
+    qty: z.number(),
+});
+export type CartItems = z.infer<typeof cartItems>;
 
 const cartItemToInsert = z.object({
     cartId: z.number(),
     sku: z.string(),
     name: z.string(),
     qty: z.number(),
-    price: z.number()
+    price: z.number(),
 });
-export type CartItemToInsert = z.infer<typeof cartItemToInsert>
+export type CartItemToInsert = z.infer<typeof cartItemToInsert>;
+
+export const existingCartLineItems = z.object({
+    id: z.number(),
+    name: z.string(),
+    price: z.number(),
+    sku: z.string(),
+    createdAt: z.any(),
+    updatedAt: z.any(),
+    cartId: z.number(),
+    qty: z.number(),
+});
+
+export type ExistingCartLineItems = z.infer<typeof existingCartLineItems>;

@@ -10,7 +10,7 @@ import { db } from "@/db";
 import { cart, cartItem, products } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { type z } from "zod";
-import { addToCartSchema, CartItemToInsert } from "@/lib/validations/cart";
+import { addToCartSchema, cartItems, CartItemToInsert, ExistingCartLineItems } from "@/lib/validations/cart";
 import { revalidatePath } from "next/cache";
 
 export async function addProductToCart(input: z.infer<typeof addToCartSchema>) {
@@ -84,4 +84,33 @@ export async function addProductToCart(input: z.infer<typeof addToCartSchema>) {
     revalidatePath("/");
     return;
     // at later point, take care of expired carts as well
+}
+
+export async function removeProductFromCart(product: ExistingCartLineItems) {
+    const existingCart = await db.query.cart.findFirst({
+        where: eq(cart.id, product.cartId)
+    })
+
+    console.log(existingCart);
+    if (!existingCart) {
+        throw Error("Existing cart not found");
+    }
+
+    const newExistingCart = {
+        ...existingCart,
+        itemsCount: existingCart.itemsCount - 1,
+        itemsQty: existingCart.itemsQty - 1,
+        grandTotal: existingCart.grandTotal - product.price
+    }
+
+    console.log()
+    await db.update(cart).set(newExistingCart).where(eq(cart.id, newExistingCart.id));
+
+
+
+    await db.delete(cartItem).where(eq(cartItem.id, product.id));
+
+
+
+   revalidatePath('/')
 }

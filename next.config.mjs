@@ -8,6 +8,12 @@ const nextConfig = {
                 hostname: "static.nike.com"
             }
         ]
+    },
+    output: "standalone",
+    logging: {
+        fetches:{
+            fullUrl: true,
+        }
     }
 };
 
