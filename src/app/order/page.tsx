@@ -17,6 +17,7 @@ export default function OrderPage() {
     // 1. define the form
     const form = useForm<Inputs>({
         resolver: zodResolver(checkoutSchema),
+        // find a way how to have address and office as conditional fields
         defaultValues: {
             email: "",
             firstname: "",
@@ -24,6 +25,7 @@ export default function OrderPage() {
             phone: "",
             city: "",
             address: "",
+            office: 0,
         },
     });
 
