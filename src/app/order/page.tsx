@@ -179,7 +179,7 @@ export default function OrderPage() {
                             key={shipmentValue}
                             control={form.control}
                             name="office"
-                            render={({ field }) => <Offices form={form} courier={shipmentValue} />}
+                            render={({ field }) => <Offices form={form} courier={shipmentValue} {...field} />}
                         />
                     ) : (
                         <FormField

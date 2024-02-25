@@ -21,7 +21,7 @@ interface Form {
 export default function Offices({ form, courier }: Form) {
     const [open, setOpen] = useState(true);
     const [searchValue, setSearchValue] = useState("");
-    const [offices, setOffices] = useState<Office[] | null >(null);
+    const [offices, setOffices] = useState<Office[] | null>(null);
 
     const handleSearchChange = (value: string) => {
         setOpen(true);
@@ -41,9 +41,7 @@ export default function Offices({ form, courier }: Form) {
                         onValueChange={handleSearchChange}
                         value={searchValue}
                     />
-                    <CommandEmpty className={cn(offices === null && "hidden")}>
-                        Не беше намерен офис.
-                    </CommandEmpty>
+                    <CommandEmpty className={cn(offices === null && "hidden")}>Не беше намерен офис.</CommandEmpty>
                     <CommandGroup className={cn(offices ? "" : "hidden", open ? "" : "hidden")}>
                         {offices && (
                             <ScrollArea className="h-48 rounded-md border">
