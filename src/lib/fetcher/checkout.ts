@@ -4,42 +4,29 @@ import { db } from "@/db";
 import { speedyOffices } from "@/db/schema";
 import { like, or } from "drizzle-orm";
 import { unstable_noStore } from "next/cache";
+import { z } from "zod";
+import { Courier } from "../validations/checkout";
 
-export async function getSpeedyOffices(searchString: string) {
-    if (searchString.length < 2) {
-        return null;
-    }
-    const speedyOfficesFound = await db
-        .select()
-        .from(speedyOffices)
-        .where(
-            or(
-                like(speedyOffices.name, `%${searchString.toUpperCase()}%`),
-                like(speedyOffices.nameEn, `%${searchString.toUpperCase()}%`)
-            )
-        );
-
-    const returnArray = speedyOfficesFound.map((office) => {
-        return {
-            officeId: office.officeId,
-            name: office.name,
-        };
-    });
-
-    console.log(returnArray);
-
-    return returnArray;
-}
+type Courier = z.infer<typeof Courier>;
 
 
-export async function getEcontOffices(searchString: string) {
+
+export async function getOffices(searchString: string, courier: Courier) {
     unstable_noStore();
-    console.log(searchString);
-    console.log(searchString.length);
 
     if (searchString.length < 3) {
         return null;
     }
+
+    if (courier === "econt-office") {
+        return getEcontOffices(searchString);
+    } else if (courier === "speedy-office") {
+        return getSpeedyOffices(searchString);
+    }
+
+}
+
+async function getSpeedyOffices(searchString: string) {
     const speedyOfficesFound = await db
         .select()
         .from(speedyOffices)
@@ -61,3 +48,26 @@ export async function getEcontOffices(searchString: string) {
     });
 }
 
+
+
+async function getEcontOffices(searchString: string) {
+    const econtOfficesFound = await db
+        .select()
+        .from(speedyOffices)
+        .where(
+            or(
+                like(speedyOffices.name, `%${searchString.toUpperCase()}%`),
+                like(speedyOffices.nameEn, `%${searchString.toUpperCase()}%`),
+                like(speedyOffices.address, `%${searchString.toUpperCase()}%`)
+            )
+        );
+
+    // console.log(returnArray);
+
+    return econtOfficesFound.map((office) => {
+        return {
+            officeId: office.officeId,
+            name: office.name + " (" + office.address + ")",
+        };
+    });
+}
