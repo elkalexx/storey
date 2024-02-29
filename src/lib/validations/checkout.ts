@@ -26,6 +26,7 @@ export const checkoutSchema = z
         city: z.string().min(2).max(50),
         office: z.number({ required_error: "Моля избери офис за доставка" }),
         address: z.string().min(2).max(100),
+        payment: z.enum(["cash", "card"]),
     })
     .and(conditionalFields);
 
